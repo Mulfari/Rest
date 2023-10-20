@@ -1,0 +1,1 @@
+export let currentLanguage = 'en'; // Inglés por defecto
