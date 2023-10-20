@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Card, Button } from '@rneui/themed';
+import Menu from './modulos/Menu';
+
+export let currentLanguage = 'es';
 
 export default function App() {
+  const [language, setLanguage] = useState(currentLanguage);
+
+  const seleccionarIdioma = (idioma) => {
+    // Actualizar el idioma seleccionado
+    setLanguage(idioma);
+
+    // Aquí puedes realizar acciones adicionales cuando se selecciona un idioma, como cambiar la configuración del idioma en la aplicación.
+    alert(`Has seleccionado ${idioma}`);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>Selecciona un idioma:</Text>
@@ -30,14 +43,10 @@ export default function App() {
           <Button title="Seleccionar" buttonStyle={styles.button} onPress={() => seleccionarIdioma('Alemán')} />
         </Card>
       </View>
+      <Menu idioma={language} />
     </View>
   );
 }
-
-const seleccionarIdioma = (idioma) => {
-  // Aquí puedes realizar acciones adicionales cuando se selecciona un idioma, como cambiar la configuración del idioma en la aplicación.
-  alert(`Has seleccionado ${idioma}`);
-};
 
 const styles = StyleSheet.create({
   container: {

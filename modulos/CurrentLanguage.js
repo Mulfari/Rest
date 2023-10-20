@@ -1,7 +1,7 @@
 // Translation.js
-import { currentLanguage } from './LanguageContext';
-import esTranslations from './idiomas/es.json';
-import enTranslations from './idiomas/en.json';
+import { currentLanguage } from '../App';
+import esTranslations from '../idiomas/es.json';
+import enTranslations from '../idiomas/en.json';
 
 export function translate(key) {
   if (currentLanguage === 'es') {
