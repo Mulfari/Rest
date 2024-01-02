@@ -1,41 +1,71 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { useLanguage } from './LanguageContext'; // Asegúrate de que la ruta sea correcta
 
-const MenuScreen = ({ selectedLanguage, onBack }) => {
+const MenuScreen = ({ onBack }) => {
+    const { language } = useLanguage();
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
     const getMenuData = () => {
-        switch (selectedLanguage) {
-            case 'Español':
-                return require('../idiomas/menu_es.json');
-            case 'English':
-                return require('../idiomas/menu_en.json');
-            case 'Deutsch':
-                return require('../idiomas/menu_de.json');
-            case 'Français':
-                return require('../idiomas/menu_fr.json');
-            default:
-                return {};
+        try {
+            const menuData = require(`../idiomas/menu_${language}.json`);
+            return menuData;
+        } catch (error) {
+            console.error('Error loading menu data:', error);
+            return { categories: [], items: [] };
         }
     };
 
     const menuData = getMenuData();
+    const categories = menuData.categories || [];
+
+    const filterMenuItems = () => {
+        if (!selectedCategory) return menuData.items;
+        return menuData.items.filter(item => item.category === selectedCategory);
+    };
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={menuData.items}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.menuItem}>
-                        <Text style={styles.itemName}>{item.name}</Text>
-                        <Text style={styles.itemDescription}>{item.description}</Text>
-                        <Text style={styles.itemPrice}>${item.price}</Text>
-                    </View>
-                )}
-            />
+            {/* Botón Volver */}
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.backButton} onPress={onBack}>
+                    <Text style={styles.buttonText}>Volver</Text>
+                </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={styles.button} onPress={onBack}>
-                <Text style={styles.buttonText}>Volver</Text>
-            </TouchableOpacity>
+            {/* Contenido del Menú */}
+            <View style={styles.menuContent}>
+                {/* Categorías */}
+                <View style={styles.categoriesColumn}>
+                    <FlatList
+                        data={categories}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={styles.categoryButton}
+                                onPress={() => setSelectedCategory(item)}
+                            >
+                                <Text style={styles.categoryButtonText}>{item}</Text>
+                            </TouchableOpacity>
+                        )}
+                    />
+                </View>
+
+                {/* Elementos del Menú */}
+                <View style={styles.itemsColumn}>
+                    <FlatList
+                        data={filterMenuItems()}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <View style={styles.menuItem}>
+                                <Text style={styles.itemName}>{item.name}</Text>
+                                <Text style={styles.itemDescription}>{item.description}</Text>
+                                <Text style={styles.itemPrice}>${item.price}</Text>
+                            </View>
+                        )}
+                    />
+                </View>
+            </View>
         </View>
     );
 };
@@ -43,15 +73,38 @@ const MenuScreen = ({ selectedLanguage, onBack }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#F5F5F5',
+    },
+    header: {
+        paddingTop: 20,
+        paddingLeft: 10,
+    },
+    backButton: {
+        backgroundColor: '#1a73e8',
+        padding: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+    },
+    menuContent: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    categoriesColumn: {
+        flex: 1,
+        // Ajusta estos estilos según tus necesidades
+    },
+    itemsColumn: {
+        flex: 2,
+        // Ajusta estos estilos según tus necesidades
     },
     menuItem: {
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
-        width: '100%',
+        // Ajusta estos estilos según tus necesidades
     },
     itemName: {
         fontSize: 18,
@@ -64,17 +117,16 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'green',
     },
-    button: {
-        marginTop: 20,
-        backgroundColor: '#1a73e8',
+    categoryButton: {
+        margin: 5,
+        backgroundColor: '#4CAF50',
         padding: 10,
         borderRadius: 5,
     },
-    buttonText: {
+    categoryButtonText: {
         color: 'white',
-        fontSize: 18,
+        fontSize: 16,
     },
 });
 
 export default MenuScreen;
-                

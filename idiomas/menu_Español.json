@@ -1,0 +1,18 @@
+{
+    "categories": ["Pescados", "Hamburguesas", "Ensaladas", "Bebidas"],
+    "items": [
+      {
+        "category": "Pescados",
+        "name": "Filete de Salmón",
+        "description": "Salmón a la parrilla con hierbas finas.",
+        "price": "12.00"
+      },
+      {
+        "category": "Hamburguesas",
+        "name": "Hamburguesa Clásica",
+        "description": "Hamburguesa con queso, lechuga y tomate.",
+        "price": "8.50"
+      }
+    ]
+  }
+  
